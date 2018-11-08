@@ -3,7 +3,6 @@
 #include <vector>
 
 #include <boost/hana/type.hpp>
-#include <boost/noncopyable.hpp>
 
 #include <jni.h>
 
@@ -14,7 +13,7 @@
 
 namespace cppjni
 {
-    class VirtualMachine: boost::noncopyable
+    class VirtualMachine: cppjni::non_copyable
     {
     public:
         VirtualMachine(const std::vector<std::string>& programOptions, JniVersion version);

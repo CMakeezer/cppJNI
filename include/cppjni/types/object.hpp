@@ -3,7 +3,7 @@
 #include <utility>
 #include <type_traits>
 
-#include <boost/noncopyable.hpp>
+#include <cppjni/non_copyable.hpp>
 
 #include <jni.h>
 
@@ -32,7 +32,7 @@ namespace types
     };
     
     template<template<typename> class class_definition_template_t>
-    class Object final: public class_definition_template_t<ObjectContainer>, public boost::noncopyable
+    class Object final: public class_definition_template_t<ObjectContainer>, public cppjni::non_copyable
     {
         friend class ObjectConverter<Object>;
         

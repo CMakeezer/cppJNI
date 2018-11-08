@@ -4,10 +4,10 @@
 #include <stdexcept>
 
 #include <boost/hana/core/when.hpp>
-#include <boost/noncopyable.hpp>
 
 #include <jni.h>
 
+#include <cppjni/non_copyable.hpp>
 #include <cppjni/concepts/is_jni_reference_type.hpp>
 
 #include "environment.hpp"
@@ -18,7 +18,7 @@ namespace jniwrappers
 {
     template<typename jni_reference_type_t>
     class LocalReference<jni_reference_type_t, boost::hana::when<concepts::is_jni_reference_type<jni_reference_type_t>>>
-        : public boost::noncopyable
+        : public cppjni::non_copyable
     {
     public:
         LocalReference(jni_reference_type_t reference);

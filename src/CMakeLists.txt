@@ -1,6 +1,13 @@
 find_package(Java 1.6 REQUIRED)
-find_package(JNI REQUIRED)
 
+SET(CMAKE_FIND_LIBRARY_SUFFIXES_COPY ${CMAKE_FIND_LIBRARY_SUFFIXES})
+if(WIN32)
+    SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll" ".lib")
+endif()
+find_package(JNI REQUIRED)
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES_COPY})
+
+find_package(hana REQUIRED)
 include(UseJava)
 
 set(SOURCES
@@ -72,16 +79,41 @@ set(HEADERS
     ${HEADERS_DIR_CPPJNI}/virtual_machine.fwd.hpp
 )
 
-add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
-        ${HEADERS_DIR}
+        $<BUILD_INTERFACE:${HEADERS_DIR}>
+    PUBLIC
         ${JNI_INCLUDE_DIRS}
-        ${Boost_INCLUDE_DIRS}
 )
 
+message(INFO "JNI_LIBRARIES=${JNI_LIBRARIES}")
+message(INFO "JAVA_JVM_LIBRARY=${JAVA_JVM_LIBRARY}")
+message(INFO "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
+
 target_link_libraries(${PROJECT_NAME}
-    ${JNI_LIBRARIES}
+    ${JAVA_JVM_LIBRARY}
+    hana
 )
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+
+install(
+        TARGETS ${PROJECT_NAME}
+        EXPORT ${PROJECT_NAME}-cmake
+        ARCHIVE DESTINATION lib/
+        LIBRARY DESTINATION lib/
+        RUNTIME DESTINATION bin/
+        INCLUDES DESTINATION include/${PROJECT_NAME})
+
+install(
+        DIRECTORY "${PROJECT_SOURCE_DIR}/include/cppjni/"
+        DESTINATION include/cppjni
+        FILES_MATCHING PATTERN "*.*hpp")
+
+install(
+        EXPORT ${PROJECT_NAME}-cmake
+        FILE ${PROJECT_NAME}-config.cmake
+        NAMESPACE ${PROJECT_NAME}::
+        DESTINATION share/${PROJECT_NAME}/cmake)

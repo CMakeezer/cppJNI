@@ -3,6 +3,7 @@
 
 #include <jni.h>
 
+#include <cppjni/non_copyable.hpp>
 #include <cppjni/concepts/is_java_class_definition.hpp>
 #include <cppjni/types/base_object_container.hpp>
 #include <cppjni/virtual_machine.fwd.hpp>
@@ -18,7 +19,7 @@ namespace types
     };
     
     template<template<typename> class class_definition_template_t>
-    class Class final: public class_definition_template_t<ClassContainer>, public boost::noncopyable
+    class Class final: public class_definition_template_t<ClassContainer>, public cppjni::non_copyable
     {
         friend class ::cppjni::VirtualMachine;
         

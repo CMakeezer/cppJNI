@@ -1,5 +1,5 @@
 #pragma once
-#include <boost/noncopyable.hpp>
+#include <cppjni/non_copyable.hpp>
 
 #include "jni_wrappers/environment.hpp"
 
@@ -17,7 +17,7 @@ namespace cppjni
      * 
      * Usage: create its instance at the beginning of manually created native thread in which you are using Java.
      */
-    class JniThreadHint: boost::noncopyable
+    class JniThreadHint: cppjni::non_copyable
     {
     public:
         JniThreadHint() = default;
